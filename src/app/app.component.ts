@@ -8,8 +8,4 @@ import { PostModel } from './posts/post.model'
 })
 export class AppComponent {
   title = 'mean';
-  storedPost : PostModel[] = [];
-  onPostAdded(post) {
-  this.storedPost.push(post);
-  }
 }

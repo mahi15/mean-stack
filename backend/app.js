@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const Post = require('./models/post');
 const mongoose = require('mongoose');
+
+const postRoutes = require('./routes/posts');
 
 const app = express();
 app.use(bodyParser.json());
@@ -18,41 +19,14 @@ mongoose.connect('mongodb+srv://mahaveer:BjkRZLtdtcWjC5V3@cluster0-9dcqj.mongodb
 
 app.use((req,res,next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers',
+  res.setHeader('Access-Control-Allow-Headers'  ,
     'Origin, X-Requested-With, Content-Type, Accept');
   res.setHeader('Access-Control-Allow-Methods',
-    'GET,POST,PATCH,DELETE,OPTIONS'
+    'GET,POST,PATCH, PUT, DELETE,OPTIONS'
   );
   next();
 });
 
-app.post('/api/posts', (req, res, next) => {
-  const post  = new Post({
-    title: req.body.title,
-    content: req.body.content
-  });
-  post.save().then(postCreated => {
-    res.status(201).json({
-      message: 'post added successfully',
-      postId: postCreated._id
-    });
-  });
-});
-
-app.get('/api/posts',(req,res,next) => {
-Post.find()
-  .then(functions => {
-    res.status(200).json({
-      message: 'post fetched successfully',
-      posts: functions
-    });
-  });
-});
-app.delete('/api/posts/:id', (req,res,next) => {
-  Post.deleteOne({_id: req.params.id}).then(result => {
-    console.log(result);
-  });
-  res.status(200).json({message: 'post deleted successfully'})
-});
+app.use('/api/posts', postRoutes);
 
 module.exports = app;
